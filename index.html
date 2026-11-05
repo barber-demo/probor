@@ -29,7 +29,8 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 /* единый стиль фото: ч/б + тёплый оттенок акцента */
 .toned .art img,.toned .ph img,.toned .opt .ic img,.toned .hero-bg,.bw .art img,.bw .ph img,.bw .opt .ic img,.bw .hero-bg{filter:grayscale(1) contrast(1.12) brightness(.8)}
 .toned .art:has(img)::after,.toned .ph:has(img)::after,.toned .ic:has(img)::after{content:'';position:absolute;inset:0;background:var(--gold);mix-blend-mode:color;opacity:.45;pointer-events:none}
-.wrap{max-width:960px;margin:auto;padding:0 18px}
+.wrap{max-width:960px;margin:auto;padding:0 18px;position:relative;z-index:1}
+#decor{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 .view{animation:in .3s ease}
 @keyframes in{from{opacity:0;transform:translateY(8px)}}
 .top{display:flex;align-items:center;gap:12px;padding:16px 0}
@@ -134,6 +135,7 @@ h3.cat{font-size:24px;margin:26px 0 12px;color:var(--beige)}h3.cat:first-of-type
 </style>
 </head>
 <body>
+<canvas id="decor" aria-hidden="true" hidden></canvas>
 <div class="wrap">
   <header class="top" id="top"></header>
   <main id="app"></main>
@@ -296,6 +298,33 @@ if(col.muted)R.setProperty('--mut',col.muted);
 if(col.card)R.setProperty('--card',col.card);
 if(col.line)R.setProperty('--line',col.line);
 if(C.buttons==='glass')document.body.classList.add('glass');
+/* ===== ДЕКОР: падающие инструменты по бокам на широких экранах (decor: "tools") ===== */
+if(C.decor==='tools'&&!matchMedia('(prefers-reduced-motion:reduce)').matches)(()=>{
+ const cv=$('#decor'),ctx=cv.getContext('2d');cv.hidden=false;
+ const P=['M3 18a3 3 0 1 0 6 0a3 3 0 1 0-6 0M15 18a3 3 0 1 0 6 0a3 3 0 1 0-6 0M8.1 15.9L20 4M15.9 15.9L4 4', // ножницы
+  'M8 9h8v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2zM7 6h10v3H7zM8 3v3M10 3v3M12 3v3M14 3v3M16 3v3M11 14h2', // машинка
+  'M12 13c-1.5-2.5-4-3.2-6-2-1.6 1-2 3-4 3 1 2 4 3 6 2 2-.8 3-2 4-3zM12 13c1.5-2.5 4-3.2 6-2 1.6 1 2 3 4 3-1 2-4 3-6 2-2-.8-3-2-4-3z', // усы
+  'M3 8h18v4H3zM5 12v7M8 12v7M11 12v7M14 12v7M17 12v7M20 12v5', // расчёска
+  'M3 15l10-6 2 3-10 6zM13 9l5-3a2 2 0 0 1 3 1.5L15 12', // опасная бритва
+  'M9 9h6v12H9zM10 9V6h4v3M14 7h3M18 5l2-1M18 7h2M18 9l2 1', // спрей
+  'M9 3h6l-1 8h-4zM10 11h4v3h-4zM9 14h6l-1 7h-4z' // помазок
+ ].map(d=>new Path2D(d));
+ let W,H,dpr,zones=[],items=[],last=0,col='#c8a15a',running=false;
+ const rnd=(a,b)=>a+Math.random()*(b-a);
+ const spawn=(top)=>{const z=zones[Math.random()*zones.length|0];return{x:rnd(z[0]+20,z[1]-20),y:top?rnd(-H,H):rnd(-120,-40),s:rnd(1.6,2.8),r:rnd(0,6.28),vr:rnd(-.6,.6),vy:rnd(18,42),sw:rnd(0,6.28),a:rnd(.18,.42),p:P[Math.random()*P.length|0],z}};
+ const size=()=>{dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;
+  const r=document.querySelector('.wrap').getBoundingClientRect();zones=[];if(r.left>90)zones.push([0,r.left-10]);if(W-r.right>90)zones.push([r.right+10,W]);
+  const n=zones.length?Math.round(zones.reduce((t,z)=>t+(z[1]-z[0]),0)*H/26000):0;items=Array.from({length:Math.min(n,60)},()=>spawn(true));
+  col=getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()||col};
+ const frame=t=>{const dt=Math.min((t-last)/1000,.05);last=t;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle=col;ctx.lineCap='round';ctx.lineJoin='round';
+  for(const it of items){it.y+=it.vy*dt;it.r+=it.vr*dt;it.sw+=dt;const x=it.x+Math.sin(it.sw)*10;
+   if(it.y>H+60)Object.assign(it,spawn(false));
+   ctx.save();ctx.globalAlpha=it.a;ctx.translate(x,it.y);ctx.rotate(it.r);ctx.scale(it.s,it.s);ctx.translate(-12,-12);ctx.lineWidth=1.5/it.s*1.2;ctx.stroke(it.p);ctx.restore()}
+  if(items.length&&!document.hidden)requestAnimationFrame(frame);else{running=false;ctx.clearRect(0,0,W,H)}};
+ const start=()=>{size();if(items.length&&!running){running=true;last=performance.now();requestAnimationFrame(frame)}};
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)start()});
+ let to;addEventListener('resize',()=>{clearTimeout(to);to=setTimeout(start,150)});start()})();
 if(col.texture){R.setProperty('--tex',`url('${col.texture}')`);document.body.classList.add('tex')}
 const F=C.fonts||{};
 if(F.display){const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(F.display)+':wght@400;500;600&display=swap';document.head.appendChild(l);R.setProperty('--display',`'${F.display}',${F.fallback||'system-ui,sans-serif'}`)}
