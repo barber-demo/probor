@@ -95,13 +95,20 @@ h3.cat{font-size:24px;margin:26px 0 12px;color:var(--beige)}h3.cat:first-of-type
 .ok .ring{width:92px;height:92px;margin:0 auto 18px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;color:var(--gold);animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
 @keyframes pop{from{transform:scale(.4);opacity:0}}
 .map{height:200px;border-radius:var(--r);border:1px solid var(--line);background:#161617;position:relative;overflow:hidden}
-.gal{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -18px;padding:0 18px 6px;scrollbar-width:none}
+.gal{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -18px;padding:0 18px 6px;scroll-padding:0 18px;scrollbar-width:none}
+.gal::-webkit-scrollbar{display:none}
 .gal figure{flex:0 0 72%;margin:0;aspect-ratio:4/5;border-radius:18px;overflow:hidden;position:relative;scroll-snap-align:start;background:var(--card);border:1px solid var(--line)}
 .gal img{position:absolute;inset:0}.gal figcaption{position:absolute;left:0;right:0;bottom:0;padding:28px 14px 12px;font-size:13px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75))}
 .cphoto{aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;position:relative;border:1px solid var(--line)}.cphoto img{position:absolute;inset:0}
 .tex .btn:not(.ghost),.tex .bar i{background:var(--tex) center/cover;color:#1b130b;text-shadow:0 1px 0 rgba(255,255,255,.25)}
 .tex .logo{border-width:2px}
-@media(min-width:700px){.gal figure{flex-basis:30%}}
+.galw{position:relative}
+.gnav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(10,10,10,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:26px;line-height:1;cursor:pointer;z-index:2;display:grid;place-items:center;transition:opacity .2s}
+.gnav.prev{left:8px}.gnav.next{right:8px}.gnav:disabled{opacity:0;pointer-events:none}
+.gbar{height:4px;background:var(--line);border-radius:4px;margin-top:14px;position:relative;overflow:hidden}
+.gbar i{position:absolute;top:0;bottom:0;left:0;border-radius:4px;background:var(--gold);transition:left .15s,width .15s}
+.tex .gbar i{background:var(--tex) center/cover}
+@media(min-width:700px){.gal{margin:0;padding:0 0 6px;scroll-padding:0}.gal figure{flex-basis:calc((100% - 24px)/3)}.gnav.prev{left:-14px}.gnav.next{right:-14px}}
 .toned .gal img,.toned .cphoto img,.bw .gal img,.bw .cphoto img{filter:grayscale(1) contrast(1.12) brightness(.8)}
 .note{margin:24px 0 0;font-size:12px;text-align:center;color:var(--mut)}
 @media(min-width:700px){.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr 1fr}.hero{min-height:460px;padding:56px}.hero h1{font-size:68px}.pole{right:70px;width:64px}.slots{grid-template-columns:repeat(6,1fr)}.brand{font-size:24px}}
@@ -199,7 +206,7 @@ const views={
 home:()=>{const ph=C.hero.photo;return `<section class="view">
  <div class="hero ${ph?'photo':''}">${ph?`<div class="hero-bg" style="background-image:url('${esc(ph)}')"></div><div class="hero-shade"></div>`:'<div class="pole"></div>'}<h1>${esc(C.hero.title)}</h1><p>${esc(C.hero.text)}</p><div class="row">${Btn('Записаться','go:booking')}${Btn('Наши мастера','go:barbers','ghost')}</div></div>
  ${SecHead('Популярные услуги','Все услуги','services')}<div class="grid g3">${popular().map(ServiceCard).join('')}</div>
- ${C.gallery&&C.gallery.length?SecHead(esc(C.galleryTitle||'Наши работы'))+`<div class="gal">${C.gallery.map(g=>`<figure>${img(g.photo,g.caption||'')}${g.caption?`<figcaption>${esc(g.caption)}</figcaption>`:''}</figure>`).join('')}</div>`:''}
+ ${C.gallery&&C.gallery.length?SecHead(esc(C.galleryTitle||'Наши работы'))+`<div class="galw"><div class="gal" id="gal">${C.gallery.map(g=>`<figure>${img(g.photo,g.caption||'')}${g.caption?`<figcaption>${esc(g.caption)}</figcaption>`:''}</figure>`).join('')}</div><button class="gnav prev" data-a="gal:-1" aria-label="Предыдущие фото">‹</button><button class="gnav next" data-a="gal:1" aria-label="Следующие фото">›</button></div><div class="gbar" aria-hidden="true"><i id="gbar"></i></div>`:''}
  ${C.advantages&&C.advantages.length?SecHead('Почему '+esc(C.brand.shortName||C.brand.name))+`<div class="grid g2">${C.advantages.map(a=>`<div class="card adv">${icon('star',26)}<div><b>${esc(a[0])}</b><span style="color:var(--mut)">${esc(a[1])}</span></div></div>`).join('')}</div>`:''}
  ${SecHead('Как нас найти')}<div class="card">${Info('pin','Адрес',esc(C.contacts.address))}${Info('clock','Часы работы',hoursText())}</div></section>`},
 services:()=>`<section class="view">${SecHead('Услуги','Мастера','barbers')}${ServiceGrid(SERVICES)}</section>`,
@@ -238,6 +245,7 @@ function Done(){const d=S.done;return `<section class="view ok"><div class="ring
 
 /* ===== ДЕЙСТВИЯ ===== */
 const A={
+ gal:v=>{const g=$('#gal'),f=g&&g.querySelector('figure');if(f)g.scrollBy({left:(+v)*(f.offsetWidth+12),behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})},
  go:v=>{location.hash=v},
  pick:v=>{S=blank();S.service=v;fitDate();S.step=1;A.go('booking');render()},
  pickb:v=>{S=blank();S.barber=v;A.go('booking');render()},
@@ -282,7 +290,10 @@ if(C.photoStyle!=='original')document.body.classList.add(C.photoStyle==='bw'?'bw
 const NAV=[['home','Главная','home'],['services','Услуги','list'],['booking','Запись','cal'],['contacts','Контакты','phone']];
 function render(){let r=location.hash.slice(1);if(!views[r])r='home';
  $('#app').innerHTML=views[r]();
- $('#nav').innerHTML=NAV.map(([id,t,i])=>`<a href="#${id}" class="${id===r||(r==='barbers'&&id==='services')?'on':''}">${icon(i,22)}${t}</a>`).join('')}
+ $('#nav').innerHTML=NAV.map(([id,t,i])=>`<a href="#${id}" class="${id===r||(r==='barbers'&&id==='services')?'on':''}">${icon(i,22)}${t}</a>`).join('');bindGal()}
+function bindGal(){const g=$('#gal');if(!g)return;const bar=$('#gbar'),pv=$('.gnav.prev'),nx=$('.gnav.next');
+ const upd=()=>{const max=g.scrollWidth-g.clientWidth,w=g.clientWidth/g.scrollWidth;bar.style.width=(w*100)+'%';bar.style.left=(max>0?g.scrollLeft/max*(1-w)*100:0)+'%';pv.disabled=g.scrollLeft<4;nx.disabled=g.scrollLeft>max-4};
+ g.addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);upd()}
 let prev='';addEventListener('hashchange',()=>{const r=location.hash;if(r!==prev)scrollTo(0,0);prev=r;render()});
 render();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
