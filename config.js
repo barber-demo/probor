@@ -6,6 +6,7 @@
   Правила:
   - Внутри фигурных скобок — строгий JSON: ключи и строки в двойных кавычках, без запятой после последнего элемента.
   - Фото кладутся в папку images/ и указываются как "images/имя.jpg" (можно и полной ссылкой https://...). Если фото нет — пишите null, будет заглушка.
+  - "photoStyle": "toned" приводит все фото к одному стилю (ч/б с тёплым оттенком акцента), "original" — фото как есть.
   - После изменений запустите: python3 tools/build.py  (обновит иконки, манифест и кеш).
 
   Сейчас здесь ДЕМО-ДАННЫЕ вымышленного барбершопа «Пробор»: адрес, телефон и мастера вымышлены.
@@ -25,6 +26,8 @@ window.BH_CONFIG = {
     "accentLight": "#e4d4b4"
   },
 
+  "photoStyle": "toned",
+
   "hero": {
     "title": "Стрижка, которую замечают",
     "text": "Добро пожаловать в «Пробор». Аккуратная работа, честные цены и время, которое принадлежит только вам.",
@@ -39,7 +42,7 @@ window.BH_CONFIG = {
       "duration": 60,
       "description": "Консультация, стрижка машинкой и ножницами, мытьё головы и финальная укладка.",
       "icon": "scissors",
-      "photo": "https://images.unsplash.com/photo-1634480257305-7f4ca3582e6a?auto=format&fit=crop&w=1200&q=75",
+      "photo": "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=1200&q=75",
       "popular": true
     },
     {
@@ -49,7 +52,7 @@ window.BH_CONFIG = {
       "duration": 30,
       "description": "Моделирование формы, чёткий контур, горячее полотенце и масло для ухода.",
       "icon": "razor",
-      "photo": "https://images.unsplash.com/photo-1494873446894-adbfecfc407a?auto=format&fit=crop&w=1200&q=75",
+      "photo": "https://images.unsplash.com/photo-1599011176306-4a96f1516d4d?auto=format&fit=crop&w=1200&q=75",
       "popular": true
     },
     {
@@ -59,7 +62,7 @@ window.BH_CONFIG = {
       "duration": 20,
       "description": "Глубокое очищение, лёгкий массаж кожи головы и укладка премиальными средствами.",
       "icon": "comb",
-      "photo": "https://images.unsplash.com/photo-1672642150262-6edcbffa463e?auto=format&fit=crop&w=1200&q=75",
+      "photo": "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=1200&q=75",
       "popular": true
     }
   ],
@@ -125,5 +128,5 @@ window.BH_CONFIG = {
     "daysAhead": 14
   },
 
-  "demoNote": "Демо-версия. Барбершоп «Пробор», его адрес, телефон, мастера и расписание вымышлены. Запись никуда не отправляется. Фото услуг: Unsplash (Hair Spies, Adam Sherez, Redd Francisco)."
+  "demoNote": "Демо-версия. Барбершоп «Пробор», его адрес, телефон, мастера и расписание вымышлены. Запись никуда не отправляется. Фото услуг: Unsplash."
 };
