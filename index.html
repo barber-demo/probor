@@ -27,7 +27,7 @@ p{color:var(--mut)}
 img{display:block;width:100%;height:100%;object-fit:cover}
 .art,.ph,.opt .ic{position:relative}.art img,.ph img,.opt .ic img{position:absolute;inset:0}
 /* единый стиль фото: ч/б + тёплый оттенок акцента */
-.toned .art img,.toned .ph img,.toned .opt .ic img{filter:grayscale(1) contrast(1.12) brightness(.8)}
+.toned .art img,.toned .ph img,.toned .opt .ic img,.toned .hero-bg,.bw .art img,.bw .ph img,.bw .opt .ic img,.bw .hero-bg{filter:grayscale(1) contrast(1.12) brightness(.8)}
 .toned .art:has(img)::after,.toned .ph:has(img)::after,.toned .ic:has(img)::after{content:'';position:absolute;inset:0;background:var(--gold);mix-blend-mode:color;opacity:.45;pointer-events:none}
 .wrap{max-width:960px;margin:auto;padding:0 18px}
 .view{animation:in .3s ease}
@@ -41,6 +41,9 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 .hero h1{font-size:46px;max-width:11ch}
 .hero p{max-width:min(34ch,calc(100% - 64px));color:#d8d0c2}
 .hero.photo p{max-width:34ch}
+.hero-bg,.hero-shade{position:absolute!important;inset:0;z-index:0!important}.hero-bg{background-size:cover;background-position:center}
+.hero-shade{background:linear-gradient(180deg,rgba(0,0,0,.1),color-mix(in srgb,var(--bg) 94%,transparent) 80%)}
+h3.cat{font-size:24px;margin:26px 0 12px;color:var(--beige)}h3.cat:first-of-type{margin-top:0}
 .pole{position:absolute!important;z-index:0!important;right:26px;top:-30px;width:46px;height:75%;border-radius:0 0 24px 24px;opacity:.9;background:repeating-linear-gradient(135deg,var(--gold) 0 12px,var(--bg) 12px 24px,var(--beige) 24px 36px,var(--bg) 36px 48px);box-shadow:0 0 0 3px var(--bg),0 0 0 4px var(--line)}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .btn{border:0;cursor:pointer;font:600 15px Manrope,sans-serif;padding:15px 24px;border-radius:16px;color:#1a1612;background:linear-gradient(135deg,var(--beige),var(--gold));text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,opacity .2s}
@@ -115,6 +118,7 @@ const SHOW_DUR=C.showDuration===true; // показывать длительно
 
 /* ===== УТИЛИТЫ ===== */
 const rub=n=>n.toLocaleString('ru-RU')+' ₽';
+const priceLabel=s=>!s.price&&!s.priceTo?'Бесплатно':s.priceTo?s.price.toLocaleString('ru-RU')+'–'+rub(s.priceTo):rub(s.price);
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pad=n=>String(n).padStart(2,'0');
@@ -167,11 +171,13 @@ const STEPS=['Услуга','Мастер','Дата и время','Конта�
 
 /* ===== КОМПОНЕНТЫ ===== */
 const Btn=(t,a,c='')=>`<button class="btn ${c}" data-a="${a}">${t}</button>`;
-const ServiceCard=s=>`<article class="card svc"><div class="art">${icon(s.icon,54)}${s.photo?img(s.photo,s.name):''}</div><h3>${esc(s.name)}</h3><p>${esc(s.description)}</p><div class="meta"><b>${rub(s.price)}</b>${SHOW_DUR?`<span>${s.duration} мин</span>`:''}</div>${Btn('Записаться','pick:'+s.id,'full')}</article>`;
+const bookable=s=>s.bookable!==false;
+const ServiceCard=s=>`<article class="card svc">${s.photo||s.icon?`<div class="art">${icon(s.icon,54)}${s.photo?img(s.photo,s.name):''}</div>`:''}<h3>${esc(s.name)}</h3><p>${esc(s.description)}</p><div class="meta"><b>${priceLabel(s)}</b>${SHOW_DUR&&bookable(s)?`<span>${s.duration} мин</span>`:''}</div>${bookable(s)?Btn('Записаться','pick:'+s.id,'full'):''}</article>`;
+const ServiceGrid=list=>{const cats=[...new Set(list.map(s=>s.category||''))];return cats.map(c=>`${c?`<h3 class="cat">${esc(c)}</h3>`:''}<div class="grid g3">${list.filter(s=>(s.category||'')===c).map(ServiceCard).join('')}</div>`).join('')};
 const BarberCard=b=>`<article class="card"><div class="ph">${barberPic(b)}</div><h3>${esc(b.name)}</h3><p style="margin:2px 0 10px;color:var(--gold)">${esc(b.role)}</p><p style="margin-bottom:12px">${esc(b.description)}</p>${(b.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}<div style="margin-top:10px">${Btn('Записаться к мастеру','pickb:'+b.id,'ghost full sm')}</div></article>`;
 const Info=(i,t,v)=>`<div class="info">${icon(i,22)}<div><b>${t}</b><span style="color:var(--mut)">${v}</span></div></div>`;
 const SecHead=(t,l,to)=>`<div class="sec-h"><h2>${t}</h2>${l?`<button class="link" data-a="go:${to}">${l}</button>`:''}</div>`;
-const popular=()=>{const p=SERVICES.filter(s=>s.popular);return(p.length?p:SERVICES).slice(0,3)};
+const popular=()=>{const p=SERVICES.filter(s=>s.popular);return(p.length?p:SERVICES.filter(bookable)).slice(0,3)};
 const telHref='tel:+'+C.contacts.phone.replace(/\D/g,'');
 const Messengers=()=>{const c=C.contacts,l=[];
  if(c.telegram)l.push(`<a class="btn" style="flex:1" href="https://t.me/${esc(c.telegram)}" target="_blank" rel="noopener">Telegram</a>`);
@@ -182,11 +188,11 @@ const Messengers=()=>{const c=C.contacts,l=[];
 /* ===== ЭКРАНЫ ===== */
 const views={
 home:()=>{const ph=C.hero.photo;return `<section class="view">
- <div class="hero ${ph?'photo':''}" ${ph?`style="background-image:linear-gradient(180deg,rgba(14,14,15,.15),rgba(14,14,15,.92) 78%),url('${esc(ph)}')"`:''}>${ph?'':'<div class="pole"></div>'}<h1>${esc(C.hero.title)}</h1><p>${esc(C.hero.text)}</p><div class="row">${Btn('Записаться','go:booking')}${Btn('Наши мастера','go:barbers','ghost')}</div></div>
+ <div class="hero ${ph?'photo':''}">${ph?`<div class="hero-bg" style="background-image:url('${esc(ph)}')"></div><div class="hero-shade"></div>`:'<div class="pole"></div>'}<h1>${esc(C.hero.title)}</h1><p>${esc(C.hero.text)}</p><div class="row">${Btn('Записаться','go:booking')}${Btn('Наши мастера','go:barbers','ghost')}</div></div>
  ${SecHead('Популярные услуги','Все услуги','services')}<div class="grid g3">${popular().map(ServiceCard).join('')}</div>
  ${C.advantages&&C.advantages.length?SecHead('Почему '+esc(C.brand.shortName||C.brand.name))+`<div class="grid g2">${C.advantages.map(a=>`<div class="card adv">${icon('star',26)}<div><b>${esc(a[0])}</b><span style="color:var(--mut)">${esc(a[1])}</span></div></div>`).join('')}</div>`:''}
  ${SecHead('Как нас найти')}<div class="card">${Info('pin','Адрес',esc(C.contacts.address))}${Info('clock','Часы работы',hoursText())}</div></section>`},
-services:()=>`<section class="view">${SecHead('Услуги','Мастера','barbers')}<div class="grid g3">${SERVICES.map(ServiceCard).join('')}</div></section>`,
+services:()=>`<section class="view">${SecHead('Услуги','Мастера','barbers')}${ServiceGrid(SERVICES)}</section>`,
 barbers:()=>`<section class="view">${SecHead('Наши мастера','Услуги','services')}<div class="grid g3">${BARBERS.map(BarberCard).join('')}</div></section>`,
 contacts:()=>`<section class="view">${SecHead('Контакты')}<div class="card">${Info('pin','Адрес',esc(C.contacts.address))}${Info('phone','Телефон',`<a href="${telHref}">${esc(C.contacts.phone)}</a>`)}${Info('clock','Часы работы',hoursText())}</div>
  ${Messengers()}
@@ -196,14 +202,14 @@ booking:()=>EXTERNAL?External():S.done?Done():Booking()};
 
 function External(){const s=S.service&&svc(S.service),b=S.barber!=='any'&&brb(S.barber);
  return `<section class="view">${SecHead('Онлайн-запись')}<div class="card">
- <p style="color:var(--text);margin-bottom:6px">${s?`Вы выбрали: ${esc(s.name)}, ${rub(s.price)}.`:b?`Вы выбрали мастера: ${esc(b.name)}.`:'Выберите услугу, мастера и удобное время.'}</p>
+ <p style="color:var(--text);margin-bottom:6px">${s?`Вы выбрали: ${esc(s.name)}, ${priceLabel(s)}.`:b?`Вы выбрали мастера: ${esc(b.name)}.`:'Выберите услугу, мастера и удобное время.'}</p>
  <p style="margin-bottom:16px">Запись откроется в системе ${esc(BK.externalName||'онлайн-записи')} в новом окне.</p>
  <a class="btn full" href="${esc(BK.externalUrl)}" target="_blank" rel="noopener">Перейти к записи</a>
  <a class="btn ghost full" style="margin-top:10px" href="${telHref}">Позвонить: ${esc(C.contacts.phone)}</a></div></section>`}
 
 function Booking(){
  const st=S.step,s=S.service&&svc(S.service);let body='';
- if(st===0)body=SERVICES.map(x=>`<button class="card opt ${S.service===x.id?'sel':''}" data-a="svc:${x.id}"><span class="ic">${icon(x.icon,28)}${x.photo?img(x.photo,x.name):''}</span><span class="t"><b>${esc(x.name)}</b>${SHOW_DUR?`<span>${x.duration} мин</span>`:''}</span><span class="p">${rub(x.price)}</span></button>`).join('<div style="height:10px"></div>');
+ if(st===0)body=SERVICES.filter(bookable).map(x=>`<button class="card opt ${S.service===x.id?'sel':''}" data-a="svc:${x.id}"><span class="ic">${icon(x.icon,28)}${x.photo?img(x.photo,x.name):''}</span><span class="t"><b>${esc(x.name)}</b>${SHOW_DUR?`<span>${x.duration} мин</span>`:''}</span><span class="p">${priceLabel(x)}</span></button>`).join('<div style="height:10px"></div>');
  if(st===1)body=[['any','Любой свободный мастер','Подберём ближайшее время'],...BARBERS.map(b=>[b.id,b.name,b.role])].map(([id,n,r])=>`<button class="card opt ${S.barber===id?'sel':''}" data-a="brb:${id}"><span class="ic">${id==='any'?icon('star',24):`<span class="ph">${barberPic(brb(id))}</span>`}</span><span class="t"><b>${esc(n)}</b><span>${esc(r)}</span></span></button>`).join('<div style="height:10px"></div>');
  if(st===2){const n=nSlots(),sl=slotsFor(S.date);
   body=`<span class="lab">Дата</span><div class="dates">${days.map(d=>{const k=dkey(d);return `<button class="date ${S.date===k?'sel':''}" ${hoursOf(d)?'':'disabled'} data-a="date:${k}"><small>${d.toLocaleDateString('ru-RU',{weekday:'short'})}</small><b>${d.getDate()}</b><small>${d.toLocaleDateString('ru-RU',{month:'short'})}</small></button>`}).join('')}</div>
@@ -217,7 +223,7 @@ function Booking(){
 const valid=()=>[!!S.service,true,S.time!==null,S.name.trim().length>1&&S.phone.replace(/\D/g,'').length===11,true][S.step];
 function summary(b=S.barber==='any'?null:brb(S.barber)){const s=svc(S.service),d=new Date(S.date+'T12:00'),t=slotsFor(S.date)[S.time];
  const r=(a,v)=>`<div class="sum"><span>${a}</span><b>${esc(v)}</b></div>`;
- return r('Услуга',s.name)+r('Мастер',b?b.name:'Любой свободный')+r('Дата',d.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'}))+r('Время',hm(t)+' – '+hm(t+s.duration))+r('Клиент',S.name+', '+S.phone)+r('К оплате в салоне',rub(s.price))}
+ return r('Услуга',s.name)+r('Мастер',b?b.name:'Любой свободный')+r('Дата',d.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'}))+r('Время',hm(t)+' – '+hm(t+s.duration))+r('Клиент',S.name+', '+S.phone)+r('К оплате в салоне',priceLabel(s))}
 function Done(){const d=S.done;return `<section class="view ok"><div class="ring"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h2 style="margin:0 0 6px">Вы записаны</h2><p>Номер записи ${d.num}. Ждём вас, ${esc(S.name.trim())}.</p><div class="card" style="text-align:left;margin:22px 0">${summary(d.barber)}</div><div class="row" style="justify-content:center">${Btn('На главную','done:home')}${Btn('Новая запись','done:booking','ghost')}</div></section>`}
 
 /* ===== ДЕЙСТВИЯ ===== */
@@ -253,7 +259,7 @@ document.title=C.brand.name+' — запись онлайн';
 $('meta[name="theme-color"]').content=col.background||'#0e0e0f';
 $('#top').innerHTML=`<div class="logo">${esc(C.brand.monogram)}</div><div class="brand">${esc(C.brand.name)}<small>${esc(C.brand.tagline)}</small></div>`;
 $('#note').textContent=C.demoNote||'';
-if(C.photoStyle!=='original')document.body.classList.add('toned');
+if(C.photoStyle!=='original')document.body.classList.add(C.photoStyle==='bw'?'bw':'toned');
 
 /* ===== НАВИГАЦИЯ И ОТРИСОВКА ===== */
 const NAV=[['home','Главная','home'],['services','Услуги','list'],['booking','Запись','cal'],['contacts','Контакты','phone']];
