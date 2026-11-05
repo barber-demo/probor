@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0e0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-title" content="Barber House">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>BARBER HOUSE — запись онлайн</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0e0f;--card:#1a1a1c;--line:#2b2b2e;--text:#f1ebe0;--mut:#a29b8f;--gold:#c8a15a;--beige:#e4d4b4;--r:20px;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font:400 15px/1.55 Manrope,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:100px}
+h1,h2,h3,.serif{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif;font-weight:600;line-height:1.15}
+h2{font-size:28px;margin:34px 0 14px}h3{font-size:21px}
+p{color:var(--mut)}
+.wrap{max-width:960px;margin:auto;padding:0 18px}
+.view{animation:in .3s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.top{display:flex;align-items:center;gap:12px;padding:16px 0}
+.logo{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center;font:700 18px "Cormorant Garamond",serif;color:var(--gold)}
+.brand{font:700 21px "Cormorant Garamond",serif;letter-spacing:.2em}
+.brand small{display:block;font:400 11px Manrope,sans-serif;letter-spacing:.04em;color:var(--mut)}
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:30px 24px;min-height:380px;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;border:1px solid var(--line);background:radial-gradient(110% 80% at 90% 0,#3b2f1b,transparent 62%),linear-gradient(160deg,#252527,#0f0f10)}
+.hero h1{font-size:46px;max-width:11ch}
+.hero p{max-width:34ch;color:#cfc7b8}
+.pole{position:absolute;right:26px;top:-30px;width:46px;height:75%;border-radius:0 0 24px 24px;opacity:.9;background:repeating-linear-gradient(135deg,var(--gold) 0 12px,var(--bg) 12px 24px,var(--beige) 24px 36px,var(--bg) 36px 48px);box-shadow:0 0 0 3px var(--bg),0 0 0 4px var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:0;cursor:pointer;font:600 15px Manrope,sans-serif;padding:15px 24px;border-radius:16px;color:#1a1612;background:linear-gradient(135deg,#e2c283,#b88d45);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,opacity .2s}
+.btn:active{transform:scale(.97)}.btn.ghost{background:transparent;color:var(--beige);border:1px solid var(--line)}
+.btn:disabled{opacity:.35;cursor:not-allowed}.btn.sm{padding:10px 16px;font-size:14px;border-radius:12px}.btn.full{width:100%}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.grid{display:grid;gap:14px}
+.art{height:112px;border-radius:14px;display:grid;place-items:center;color:var(--gold);margin-bottom:14px;background:linear-gradient(135deg,#2e2a22,#19191b)}
+.art svg{width:54px}
+.meta{display:flex;justify-content:space-between;align-items:center;margin:12px 0}
+.meta b{font:600 22px "Cormorant Garamond",serif;color:var(--beige)}.meta span{color:var(--mut);font-size:13px}
+.svc p{min-height:46px}
+.ph{height:190px;border-radius:14px;margin-bottom:14px;overflow:hidden;background:linear-gradient(160deg,#34302a,#1a1a1c)}
+.ph svg{width:100%;height:100%}
+.tag{display:inline-block;padding:4px 11px;border-radius:99px;font-size:12px;background:rgba(200,161,90,.14);color:var(--beige);margin:0 6px 6px 0}
+.adv{display:flex;gap:12px;align-items:flex-start}.adv svg{flex:0 0 26px;color:var(--gold)}
+.adv b{display:block;font-weight:600}
+.info{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}.info:last-child{border:0}
+.info svg{flex:0 0 22px;color:var(--gold);margin-top:2px}.info b{display:block;font-weight:600}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline}
+.link{background:none;border:0;color:var(--gold);font:500 14px Manrope,sans-serif;cursor:pointer;padding:6px 0}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(540px,calc(100% - 24px));display:flex;z-index:20;background:rgba(26,26,28,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:26px;padding:6px}
+.nav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;border-radius:20px;color:var(--mut);text-decoration:none;font-size:11.5px;transition:.2s}
+.nav a.on{color:var(--gold);background:rgba(200,161,90,.12)}.nav svg{width:22px;height:22px}
+/* booking */
+.bk-h{display:flex;align-items:center;gap:10px;padding-top:6px}
+.icon-b{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer;display:grid;place-items:center;font-size:18px}
+.bar{height:8px;border-radius:8px;background:var(--card);border:1px solid var(--line);overflow:hidden;margin:14px 0 4px}
+.bar i{display:block;height:100%;border-radius:8px;transition:width .4s;background:repeating-linear-gradient(135deg,var(--gold) 0 8px,var(--beige) 8px 16px)}
+.opt{display:flex;gap:14px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;transition:.2s}
+.opt .ic{flex:0 0 50px;height:50px;border-radius:14px;display:grid;place-items:center;color:var(--gold);background:#26241f}.opt .ic svg{width:28px}
+.opt .t{flex:1}.opt .t b{display:block;font-weight:600}.opt .t span{color:var(--mut);font-size:13px}.opt .p{font:600 19px "Cormorant Garamond",serif;color:var(--beige)}
+.sel{border-color:var(--gold)!important;background:rgba(200,161,90,.1)!important}
+.dates{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}
+.date{flex:0 0 58px;padding:10px 0;text-align:center;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;cursor:pointer}
+.date small{display:block;color:var(--mut);font-size:12px}.date b{font:600 21px "Cormorant Garamond",serif}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.slot{padding:12px 0;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;cursor:pointer;transition:.15s}
+.slot:disabled{opacity:.28;text-decoration:line-through;cursor:not-allowed}
+.lab{display:block;margin:0 0 6px;font-size:13px;color:var(--mut)}
+.inp{width:100%;padding:15px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--text);font:inherit;font-size:16px;margin-bottom:16px}.inp:focus{outline:0;border-color:var(--gold)}
+.sum{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}.sum:last-child{border:0}.sum span{color:var(--mut)}.sum b{font-weight:600;text-align:right}
+.cta{position:sticky;bottom:calc(84px + env(safe-area-inset-bottom,0px));padding-top:14px;margin-top:14px;background:linear-gradient(transparent,var(--bg) 35%)}
+.ok{text-align:center;padding-top:20px}
+.ok .ring{width:92px;height:92px;margin:0 auto 18px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;color:var(--gold);animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+.map{height:200px;border-radius:var(--r);border:1px solid var(--line);background:#161617;position:relative;overflow:hidden}
+.note{margin:24px 0 0;font-size:12px;text-align:center;color:var(--mut)}
+@media(min-width:700px){.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr 1fr}.hero{min-height:460px;padding:56px}.hero h1{font-size:68px}.pole{right:70px;width:64px}.slots{grid-template-columns:repeat(6,1fr)}.brand{font-size:24px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><div class="logo">BH</div><div class="brand">BARBER HOUSE<small>Мужской барбершоп</small></div></header>
+  <main id="app"></main>
+  <p class="note">Демо-прототип. Адрес, телефон, имена мастеров и расписание вымышлены. Запись никуда не отправляется.</p>
+</div>
+<nav class="nav" id="nav"></nav>
+
+<script>
+/* ===== ДЕМО-ДАННЫЕ (вымышленные) ===== */
+const SERVICES=[
+ {id:'cut',name:'Мужская стрижка',price:1500,dur:60,icon:'scissors',desc:'Консультация, стрижка машинкой и ножницами, мытьё головы и финальная укладка.'},
+ {id:'beard',name:'Стрижка бороды',price:900,dur:30,icon:'razor',desc:'Моделирование формы, чёткий контур, горячее полотенце и масло для ухода.'},
+ {id:'wash',name:'Мытьё и укладка',price:500,dur:20,icon:'comb',desc:'Глубокое очищение, лёгкий массаж кожи головы и укладка премиальными средствами.'}];
+const BARBERS=[
+ {id:'a',name:'Алексей Громов',role:'Старший барбер',tags:['Классика','Фейд','Окантовка'],hair:'#2a2118',beard:false,skin:'#d7b496',desc:'Девять лет за креслом. Безупречные классические стрижки и сложные переходы.'},
+ {id:'d',name:'Дмитрий Волков',role:'Мастер по бороде',tags:['Борода','Бритьё','Уход'],hair:'#171412',beard:true,skin:'#c9a283',desc:'Работает с бородой как скульптор: форма, контур, опасная бритва, уход за кожей.'},
+ {id:'t',name:'Артём Лебедев',role:'Стилист',tags:['Тренды','Текстура','Укладка'],hair:'#5b4630',beard:false,skin:'#e0c1a4',desc:'Современные стрижки и укладки, подбор формы под тип волос и образ жизни.'}];
+const ADV=[['Опытные мастера','Средний стаж команды — 7 лет'],['Запись без очередей','Вы приходите ровно ко времени'],['Премиальный уход','Профессиональная косметика'],['Атмосфера','Кофе, виски-бар и тишина']];
+const ADDR='Москва, ул. Образцовая, 12 (вымышленный адрес)',PHONE='+7 (900) 000-00-00',HOURS='Ежедневно, 10:00–21:00';
+
+/* ===== УТИЛИТЫ ===== */
+const rub=n=>n.toLocaleString('ru-RU')+' ₽';
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const hm=m=>pad(m/60|0)+':'+pad(m%60);
+const dkey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const svc=id=>SERVICES.find(s=>s.id===id), brb=id=>BARBERS.find(b=>b.id===id);
+const hash=s=>{let x=7;for(const c of s)x=(x*31+c.charCodeAt(0))>>>0;return x%100};
+const IC={
+ scissors:'<circle cx="22" cy="62" r="8"/><circle cx="58" cy="62" r="8"/><path d="M28 55L60 14M52 55L20 14"/>',
+ razor:'<rect x="8" y="46" width="36" height="14" rx="6"/><path d="M44 48L70 30l2 7-24 20z"/>',
+ comb:'<rect x="8" y="26" width="64" height="18" rx="4"/><path d="M16 44v16M26 44v16M36 44v16M46 44v16M56 44v16M64 44v16"/>',
+ pin:'<path d="M12 21s7-6.2 7-12a7 7 0 10-14 0c0 5.800 7 12 7 12z"/><circle cx="12" cy="9" r="2.500"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ phone:'<path d="M5 4h4l2 5-2.500 1.500a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/>',
+ home:'<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+ list:'<path d="M4 7h16M4 12h16M4 17h10"/>',star:'<path d="M12 3l2.700 5.500 6 .9-4.400 4.200 1 6L12 16.800 6.700 19.600l1-6L3.300 9.400l6-.9z"/>'};
+const icon=(k,w=24,sw=1.8)=>`<svg viewBox="${IC[k].includes('rx="4"')||k==='scissors'||k==='razor'||k==='comb'?'0 0 80 80':'0 0 24 24'}" width="${w}" height="${w}" fill="none" stroke="currentColor" stroke-width="${k==='scissors'||k==='razor'||k==='comb'?2.500:sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k]}</svg>`;
+const portrait=b=>`<svg viewBox="0 0 200 190" preserveAspectRatio="xMidYMax slice" aria-label="${b.name}"><path d="M20 190c0-42 36-60 80-60s80 18 80 60z" fill="#2b2b2e"/><path d="M82 190l18-34 18 34z" fill="#e4d4b4" opacity=".9"/><rect x="88" y="104" width="24" height="30" rx="8" fill="${b.skin}"/><ellipse cx="100" cy="82" rx="30" ry="36" fill="${b.skin}"/>${b.beard?`<path d="M70 86c0 34 14 48 30 48s30-14 30-48c-6 14-16 18-30 18s-24-4-30-18z" fill="${b.hair}"/>`:''}<path d="M68 78c-4-34 14-50 34-50s32 18 28 50c-4-14-12-24-30-24s-26 10-32 24z" fill="${b.hair}"/></svg>`;
+
+/* ===== ДОСТУПНОСТЬ (демо) ===== */
+const SL=[];for(let m=600;m<1260;m+=30)SL.push(m); // 10:00–20:30
+const booked={}; // записи, сделанные в этой сессии
+const free=(bid,k,i,n)=>{const now=new Date(),isToday=k===dkey(now);
+ for(let j=0;j<n;j++){const x=i+j;if(x>=SL.length||hash(k+bid+x)<30||booked[k+bid+x])return false}
+ return !(isToday&&SL[i]<=now.getHours()*60+now.getMinutes()+30)};
+const slotFree=(k,i,n)=>S.barber==='any'?BARBERS.some(b=>free(b.id,k,i,n)):free(S.barber,k,i,n);
+const nSlots=()=>Math.ceil(svc(S.service).dur/30);
+const days=Array.from({length:14},(_,i)=>{const d=new Date();d.setDate(d.getDate()+i);return d});
+
+/* ===== СОСТОЯНИЕ ===== */
+const blank=()=>({step:0,service:null,barber:'any',date:dkey(days[0]),time:null,name:'',phone:'',done:null});
+let S=blank();
+const STEPS=['Услуга','Мастер','Дата и время','Контакты','Проверка'];
+
+/* ===== КОМПОНЕНТЫ ===== */
+const Btn=(t,a,c='')=>`<button class="btn ${c}" data-a="${a}">${t}</button>`;
+const ServiceCard=s=>`<article class="card svc"><div class="art">${icon(s.icon,54)}</div><h3>${s.name}</h3><p>${s.desc}</p><div class="meta"><b>${rub(s.price)}</b><span>${s.dur} мин</span></div>${Btn('Записаться','pick:'+s.id,'full')}</article>`;
+const BarberCard=b=>`<article class="card"><div class="ph">${portrait(b)}</div><h3>${b.name}</h3><p style="margin:2px 0 10px;color:var(--gold)">${b.role}</p><p style="margin-bottom:12px">${b.desc}</p>${b.tags.map(t=>`<span class="tag">${t}</span>`).join('')}<div style="margin-top:10px">${Btn('Записаться к мастеру','pickb:'+b.id,'ghost full sm')}</div></article>`;
+const Info=(i,t,v)=>`<div class="info">${icon(i,22)}<div><b>${t}</b><span style="color:var(--mut)">${v}</span></div></div>`;
+const SecHead=(t,l,to)=>`<div class="sec-h"><h2>${t}</h2>${l?`<button class="link" data-a="go:${to}">${l}</button>`:''}</div>`;
+
+/* ===== ЭКРАНЫ ===== */
+const views={
+home:()=>`<section class="view">
+ <div class="hero"><div class="pole"></div><h1>Стрижка, которую замечают</h1><p>Добро пожаловать в Barber House. Аккуратная работа, честные цены и время, которое принадлежит только вам.</p><div class="row">${Btn('Записаться','go:booking')}${Btn('Наши мастера','go:barbers','ghost')}</div></div>
+ ${SecHead('Популярные услуги','Все услуги','services')}<div class="grid g3">${SERVICES.map(ServiceCard).join('')}</div>
+ ${SecHead('Почему Barber House')}<div class="grid g2">${ADV.map(a=>`<div class="card adv">${icon('star',26)}<div><b>${a[0]}</b><span style="color:var(--mut)">${a[1]}</span></div></div>`).join('')}</div>
+ ${SecHead('Как нас найти')}<div class="card">${Info('pin','Адрес',ADDR)}${Info('clock','Часы работы',HOURS)}</div></section>`,
+services:()=>`<section class="view">${SecHead('Услуги','Мастера','barbers')}<div class="grid g3">${SERVICES.map(ServiceCard).join('')}</div></section>`,
+barbers:()=>`<section class="view">${SecHead('Наши мастера','Услуги','services')}<div class="grid g3">${BARBERS.map(BarberCard).join('')}</div></section>`,
+contacts:()=>`<section class="view">${SecHead('Контакты')}<div class="card">${Info('pin','Адрес',ADDR)}${Info('phone','Телефон',PHONE)}${Info('clock','Часы работы',HOURS)}</div>
+ <div class="row" style="margin:14px 0"><a class="btn" style="flex:1" href="https://t.me/barberhouse_demo" target="_blank" rel="noopener">Telegram</a><a class="btn ghost" style="flex:1" href="https://wa.me/79000000000" target="_blank" rel="noopener">WhatsApp</a></div>
+ <div class="map" role="img" aria-label="Заглушка карты"><svg viewBox="0 0 400 200" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"><g stroke="#2b2b2e" stroke-width="10" fill="none"><path d="M-10 60L410 90M-10 150L410 120M90-10L130 210M260-10L230 210"/></g><g stroke="#232325" stroke-width="3" fill="none"><path d="M-10 105L410 105M180-10L190 210"/></g><g transform="translate(176 56) scale(1.800)" fill="#c8a15a" stroke="#0e0e0f"><path d="M12 21s7-6.200 7-12a7 7 0 10-14 0c0 5.800 7 12 7 12z"/><circle cx="12" cy="9" r="2.500" fill="#0e0e0f"/></g></svg></div>
+ <p style="margin-top:8px;font-size:13px">Здесь будет интерактивная карта.</p></section>`,
+booking:()=>S.done?Done():Booking()};
+
+function Booking(){
+ const st=S.step,s=S.service&&svc(S.service);let body='';
+ if(st===0)body=SERVICES.map(x=>`<button class="card opt ${S.service===x.id?'sel':''}" data-a="svc:${x.id}"><span class="ic">${icon(x.icon,28)}</span><span class="t"><b>${x.name}</b><span>${x.dur} мин</span></span><span class="p">${rub(x.price)}</span></button>`).join('<div style="height:10px"></div>');
+ if(st===1)body=[['any','Любой свободный мастер','Подберём ближайшее время'],...BARBERS.map(b=>[b.id,b.name,b.role])].map(([id,n,r])=>`<button class="card opt ${S.barber===id?'sel':''}" data-a="brb:${id}"><span class="ic">${id==='any'?icon('star',24):`<span class="ph" style="width:50px;height:50px;margin:0;border-radius:14px">${portrait(brb(id))}</span>`}</span><span class="t"><b>${n}</b><span>${r}</span></span></button>`).join('<div style="height:10px"></div>');
+ if(st===2){const n=nSlots();body=`<span class="lab">Дата</span><div class="dates">${days.map(d=>{const k=dkey(d);return `<button class="date ${S.date===k?'sel':''}" data-a="date:${k}"><small>${d.toLocaleDateString('ru-RU',{weekday:'short'})}</small><b>${d.getDate()}</b><small>${d.toLocaleDateString('ru-RU',{month:'short'})}</small></button>`}).join('')}</div>
+ <span class="lab" style="margin-top:14px">Свободное время (${s.dur} мин)</span><div class="slots">${SL.map((m,i)=>{const ok=slotFree(S.date,i,n);return `<button class="slot ${S.time===i?'sel':''}" ${ok?'':'disabled'} data-a="time:${i}">${hm(m)}</button>`}).join('')}</div>`}
+ if(st===3)body=`<label class="lab" for="nm">Ваше имя</label><input class="inp" id="nm" autocomplete="name" placeholder="Например, Иван" value="${S.name}"><label class="lab" for="ph">Телефон</label><input class="inp" id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" value="${S.phone}">`;
+ if(st===4)body=`<div class="card">${summary()}</div>`;
+ const last=st===4;
+ return `<section class="view"><div class="bk-h"><button class="icon-b" data-a="back" aria-label="Назад">‹</button><div><h2 style="margin:0;font-size:26px">${STEPS[st]}</h2><span style="color:var(--mut);font-size:13px">Шаг ${st+1} из ${STEPS.length}</span></div></div>
+ <div class="bar"><i style="width:${(st+1)/STEPS.length*100}%"></i></div><div style="height:14px"></div>${body}
+ <div class="cta"><button class="btn full" id="next" data-a="${last?'confirm':'next'}" ${valid()?'':'disabled'}>${last?'Подтвердить запись':'Продолжить'}</button></div></section>`}
+const valid=()=>[!!S.service,true,S.time!==null,S.name.trim().length>1&&S.phone.replace(/\D/g,'').length===11,true][S.step];
+function summary(b=S.barber==='any'?null:brb(S.barber)){const s=svc(S.service),d=new Date(S.date+'T12:00');
+ const r=(a,v)=>`<div class="sum"><span>${a}</span><b>${v}</b></div>`;
+ return r('Услуга',s.name)+r('Мастер',b?b.name:'Любой свободный')+r('Дата',d.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'}))+r('Время',hm(SL[S.time])+' – '+hm(SL[S.time]+s.dur))+r('Клиент',S.name+', '+S.phone)+r('К оплате в салоне',rub(s.price))}
+function Done(){const d=S.done;return `<section class="view ok"><div class="ring"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg></div><h2 style="margin:0 0 6px">Вы записаны</h2><p>Номер записи ${d.num}. Ждём вас, ${S.name.trim()}.</p><div class="card" style="text-align:left;margin:22px 0">${summary(d.barber)}</div><div class="row" style="justify-content:center">${Btn('На главную','done:home')}${Btn('Новая запись','done:booking','ghost')}</div></section>`}
+
+/* ===== ДЕЙСТВИЯ ===== */
+const A={
+ go:v=>{location.hash=v},
+ pick:v=>{S=blank();S.service=v;S.step=1;A.go('booking');render()},
+ pickb:v=>{S=blank();S.barber=v;A.go('booking');render()},
+ svc:v=>{S.service=v;S.time=null;render()},
+ brb:v=>{S.barber=v;S.time=null;render()},
+ date:v=>{S.date=v;S.time=null;render()},
+ time:v=>{S.time=+v;render()},
+ next:()=>{if(valid()){S.step++;render()}},
+ back:()=>{if(S.step>0){S.step--;render()}else A.go('home')},
+ confirm:()=>{const n=nSlots(),i=S.time;let b=S.barber==='any'?BARBERS.find(x=>free(x.id,S.date,i,n)):brb(S.barber);
+  if(!b||!free(b.id,S.date,i,n)){S.step=2;S.time=null;render();return}
+  for(let j=0;j<n;j++)booked[S.date+b.id+(i+j)]=1;
+  S.done={barber:b,num:'BH-'+(1000+Math.random()*9000|0)};render()},
+ done:v=>{S=blank();A.go(v);render()}};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const[a,v]=el.dataset.a.split(':');A[a](v)});
+document.addEventListener('input',e=>{
+ if(e.target.id==='nm')S.name=e.target.value;
+ if(e.target.id==='ph'){let d=e.target.value.replace(/\D/g,'');if(/^[78]/.test(d))d=d.slice(1);d=d.slice(0,10);
+  let f=d?'+7 ('+d.slice(0,3):'';if(d.length>=3)f+=') '+d.slice(3,6);if(d.length>6)f+='-'+d.slice(6,8);if(d.length>8)f+='-'+d.slice(8,10);
+  e.target.value=f;S.phone=f.length?f:''}
+ if(e.target.id){const b=$('#next');if(b)b.disabled=!valid()}});
+
+/* ===== НАВИГАЦИЯ И ОТРИСОВКА ===== */
+const NAV=[['home','Главная','home'],['services','Услуги','list'],['booking','Запись','cal'],['contacts','Контакты','phone']];
+function render(){let r=location.hash.slice(1);if(!views[r])r='home';
+ $('#app').innerHTML=views[r]();
+ $('#nav').innerHTML=NAV.map(([id,t,i])=>`<a href="#${id}" class="${id===r||(r==='barbers'&&id==='services')?'on':''}">${icon(i,22)}${t}</a>`).join('')}
+let prev='';addEventListener('hashchange',()=>{const r=location.hash;if(r!==prev)scrollTo(0,0);prev=r;render()});
+render();
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
