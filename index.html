@@ -111,6 +111,7 @@ const C=window.BH_CONFIG;
 const SERVICES=C.services, BARBERS=C.barbers, BK=C.booking||{};
 const EXTERNAL=BK.mode==='external'&&BK.externalUrl;
 const STEP=BK.slotStep||30;
+const SHOW_DUR=C.showDuration===true; // показывать длительность услуг клиентам
 
 /* ===== УТИЛИТЫ ===== */
 const rub=n=>n.toLocaleString('ru-RU')+' ₽';
@@ -166,7 +167,7 @@ const STEPS=['Услуга','Мастер','Дата и время','Конта�
 
 /* ===== КОМПОНЕНТЫ ===== */
 const Btn=(t,a,c='')=>`<button class="btn ${c}" data-a="${a}">${t}</button>`;
-const ServiceCard=s=>`<article class="card svc"><div class="art">${icon(s.icon,54)}${s.photo?img(s.photo,s.name):''}</div><h3>${esc(s.name)}</h3><p>${esc(s.description)}</p><div class="meta"><b>${rub(s.price)}</b><span>${s.duration} мин</span></div>${Btn('Записаться','pick:'+s.id,'full')}</article>`;
+const ServiceCard=s=>`<article class="card svc"><div class="art">${icon(s.icon,54)}${s.photo?img(s.photo,s.name):''}</div><h3>${esc(s.name)}</h3><p>${esc(s.description)}</p><div class="meta"><b>${rub(s.price)}</b>${SHOW_DUR?`<span>${s.duration} мин</span>`:''}</div>${Btn('Записаться','pick:'+s.id,'full')}</article>`;
 const BarberCard=b=>`<article class="card"><div class="ph">${barberPic(b)}</div><h3>${esc(b.name)}</h3><p style="margin:2px 0 10px;color:var(--gold)">${esc(b.role)}</p><p style="margin-bottom:12px">${esc(b.description)}</p>${(b.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}<div style="margin-top:10px">${Btn('Записаться к мастеру','pickb:'+b.id,'ghost full sm')}</div></article>`;
 const Info=(i,t,v)=>`<div class="info">${icon(i,22)}<div><b>${t}</b><span style="color:var(--mut)">${v}</span></div></div>`;
 const SecHead=(t,l,to)=>`<div class="sec-h"><h2>${t}</h2>${l?`<button class="link" data-a="go:${to}">${l}</button>`:''}</div>`;
@@ -202,11 +203,11 @@ function External(){const s=S.service&&svc(S.service),b=S.barber!=='any'&&brb(S.
 
 function Booking(){
  const st=S.step,s=S.service&&svc(S.service);let body='';
- if(st===0)body=SERVICES.map(x=>`<button class="card opt ${S.service===x.id?'sel':''}" data-a="svc:${x.id}"><span class="ic">${icon(x.icon,28)}${x.photo?img(x.photo,x.name):''}</span><span class="t"><b>${esc(x.name)}</b><span>${x.duration} мин</span></span><span class="p">${rub(x.price)}</span></button>`).join('<div style="height:10px"></div>');
+ if(st===0)body=SERVICES.map(x=>`<button class="card opt ${S.service===x.id?'sel':''}" data-a="svc:${x.id}"><span class="ic">${icon(x.icon,28)}${x.photo?img(x.photo,x.name):''}</span><span class="t"><b>${esc(x.name)}</b>${SHOW_DUR?`<span>${x.duration} мин</span>`:''}</span><span class="p">${rub(x.price)}</span></button>`).join('<div style="height:10px"></div>');
  if(st===1)body=[['any','Любой свободный мастер','Подберём ближайшее время'],...BARBERS.map(b=>[b.id,b.name,b.role])].map(([id,n,r])=>`<button class="card opt ${S.barber===id?'sel':''}" data-a="brb:${id}"><span class="ic">${id==='any'?icon('star',24):`<span class="ph">${barberPic(brb(id))}</span>`}</span><span class="t"><b>${esc(n)}</b><span>${esc(r)}</span></span></button>`).join('<div style="height:10px"></div>');
  if(st===2){const n=nSlots(),sl=slotsFor(S.date);
   body=`<span class="lab">Дата</span><div class="dates">${days.map(d=>{const k=dkey(d);return `<button class="date ${S.date===k?'sel':''}" ${hoursOf(d)?'':'disabled'} data-a="date:${k}"><small>${d.toLocaleDateString('ru-RU',{weekday:'short'})}</small><b>${d.getDate()}</b><small>${d.toLocaleDateString('ru-RU',{month:'short'})}</small></button>`}).join('')}</div>
-  <span class="lab" style="margin-top:14px">Свободное время (${s.duration} мин)</span>${sl.length?`<div class="slots">${sl.map((m,i)=>{const ok=slotFree(S.date,i,n);return `<button class="slot ${S.time===i?'sel':''}" ${ok?'':'disabled'} data-a="time:${i}">${hm(m)}</button>`}).join('')}</div>`:'<p>В этот день мы не работаем. Выберите другую дату.</p>'}`}
+  <span class="lab" style="margin-top:14px">Свободное время${SHOW_DUR?` (${s.duration} мин)`:''}</span>${sl.length?`<div class="slots">${sl.map((m,i)=>{const ok=slotFree(S.date,i,n);return `<button class="slot ${S.time===i?'sel':''}" ${ok?'':'disabled'} data-a="time:${i}">${hm(m)}</button>`}).join('')}</div>`:'<p>В этот день мы не работаем. Выберите другую дату.</p>'}`}
  if(st===3)body=`<label class="lab" for="nm">Ваше имя</label><input class="inp" id="nm" autocomplete="name" placeholder="Например, Иван" value="${esc(S.name)}"><label class="lab" for="ph">Телефон</label><input class="inp" id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" value="${esc(S.phone)}">`;
  if(st===4)body=`<div class="card">${summary()}</div>`;
  const last=st===4;
