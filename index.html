@@ -18,10 +18,10 @@
   все данные барбершопа — в config.js, фото — в папке images/.
 -->
 <style>
-:root{--bg:#0e0e0f;--card:#1a1a1c;--line:#2b2b2e;--text:#f1ebe0;--mut:#a29b8f;--gold:#c8a15a;--beige:#e4d4b4;--r:20px;color-scheme:dark}
+:root{--display:"Cormorant Garamond",Georgia,"Times New Roman",serif;--bg:#0e0e0f;--card:#1a1a1c;--line:#2b2b2e;--text:#f1ebe0;--mut:#a29b8f;--gold:#c8a15a;--beige:#e4d4b4;--r:20px;color-scheme:dark}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--text);font:400 15px/1.55 Manrope,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:env(safe-area-inset-top,0px) 0 calc(100px + env(safe-area-inset-bottom,0px))}
-h1,h2,h3{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif;font-weight:600;line-height:1.15}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.15}
 h2{font-size:28px;margin:34px 0 14px}h3{font-size:21px}
 p{color:var(--mut)}
 img{display:block;width:100%;height:100%;object-fit:cover}
@@ -33,8 +33,8 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 .view{animation:in .3s ease}
 @keyframes in{from{opacity:0;transform:translateY(8px)}}
 .top{display:flex;align-items:center;gap:12px;padding:16px 0}
-.logo{flex:0 0 44px;height:44px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center;font:700 17px "Cormorant Garamond",serif;color:var(--gold)}
-.brand{font:700 21px "Cormorant Garamond",serif;letter-spacing:.2em;line-height:1.2}
+.logo{flex:0 0 44px;height:44px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center;font:700 17px var(--display);color:var(--gold)}
+.brand{font:700 21px var(--display);letter-spacing:.2em;line-height:1.2}
 .brand small{display:block;font:400 11px Manrope,sans-serif;letter-spacing:.04em;color:var(--mut)}
 .hero{position:relative;overflow:hidden;border-radius:28px;padding:30px 24px;min-height:380px;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;border:1px solid var(--line);background:radial-gradient(110% 80% at 90% 0,color-mix(in srgb,var(--gold) 28%,transparent),transparent 62%),linear-gradient(160deg,#252527,#0f0f10);background-size:cover;background-position:center}
 .hero>*{position:relative;z-index:1}
@@ -42,8 +42,8 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 .hero p{max-width:min(34ch,calc(100% - 64px));color:#d8d0c2}
 .hero.photo p{max-width:34ch}
 .hero-bg,.hero-shade{position:absolute!important;inset:0;z-index:0!important}.hero-bg{background-size:cover;background-position:center}
-.hero-shade{background:linear-gradient(180deg,rgba(0,0,0,.1),color-mix(in srgb,var(--bg) 94%,transparent) 80%)}
-.bw .ph svg{filter:grayscale(1) brightness(.9)}
+.hero-shade{background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.35) 30%,color-mix(in srgb,var(--bg) 95%,transparent) 82%)}
+body:not(.toned) .ph svg{filter:grayscale(1) brightness(.9)}
 h3.cat{font-size:24px;margin:26px 0 12px;color:var(--beige)}h3.cat:first-of-type{margin-top:0}
 .pole{position:absolute!important;z-index:0!important;right:26px;top:-30px;width:46px;height:75%;border-radius:0 0 24px 24px;opacity:.9;background:repeating-linear-gradient(135deg,var(--gold) 0 12px,var(--bg) 12px 24px,var(--beige) 24px 36px,var(--bg) 36px 48px);box-shadow:0 0 0 3px var(--bg),0 0 0 4px var(--line)}
 .row{display:flex;gap:10px;flex-wrap:wrap}
@@ -56,7 +56,7 @@ h3.cat{font-size:24px;margin:26px 0 12px;color:var(--beige)}h3.cat:first-of-type
 .art{aspect-ratio:16/10;border-radius:14px;display:grid;place-items:center;color:var(--gold);margin-bottom:14px;overflow:hidden;background:linear-gradient(135deg,#2e2a22,#19191b)}
 .art svg{width:54px}
 .meta{display:flex;justify-content:space-between;align-items:center;margin:12px 0}
-.meta b{font:600 22px "Cormorant Garamond",serif;color:var(--beige)}.meta span{color:var(--mut);font-size:13px}
+.meta b{font:600 22px var(--display);color:var(--beige)}.meta span{color:var(--mut);font-size:13px}
 .svc{display:flex;flex-direction:column}.svc p{flex:1}
 .ph{height:220px;border-radius:14px;margin-bottom:14px;overflow:hidden;background:linear-gradient(160deg,#34302a,#1a1a1c)}
 .ph svg{width:100%;height:100%}
@@ -78,12 +78,12 @@ h3.cat{font-size:24px;margin:26px 0 12px;color:var(--beige)}h3.cat:first-of-type
 .bar i{display:block;height:100%;border-radius:8px;transition:width .4s;background:repeating-linear-gradient(135deg,var(--gold) 0 8px,var(--beige) 8px 16px)}
 .opt{display:flex;gap:14px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;transition:.2s}
 .opt .ic{flex:0 0 50px;height:50px;border-radius:14px;display:grid;place-items:center;color:var(--gold);background:#26241f;overflow:hidden}.opt .ic svg{width:28px}.opt .ic .ph{width:50px;height:50px;margin:0;border-radius:14px}
-.opt .t{flex:1}.opt .t b{display:block;font-weight:600}.opt .t span{color:var(--mut);font-size:13px}.opt .p{font:600 19px "Cormorant Garamond",serif;color:var(--beige);white-space:nowrap}
+.opt .t{flex:1}.opt .t b{display:block;font-weight:600}.opt .t span{color:var(--mut);font-size:13px}.opt .p{font:600 19px var(--display);color:var(--beige);white-space:nowrap}
 .sel{border-color:var(--gold)!important;background:color-mix(in srgb,var(--gold) 11%,transparent)!important}
 .dates{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}
 .date{flex:0 0 58px;padding:10px 0;text-align:center;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;cursor:pointer}
 .date:disabled{opacity:.3;cursor:not-allowed}
-.date small{display:block;color:var(--mut);font-size:12px}.date b{font:600 21px "Cormorant Garamond",serif}
+.date small{display:block;color:var(--mut);font-size:12px}.date b{font:600 21px var(--display)}
 .slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .slot{padding:12px 0;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;cursor:pointer;transition:.15s}
 .slot:disabled{opacity:.28;text-decoration:line-through;cursor:not-allowed}
@@ -95,6 +95,14 @@ h3.cat{font-size:24px;margin:26px 0 12px;color:var(--beige)}h3.cat:first-of-type
 .ok .ring{width:92px;height:92px;margin:0 auto 18px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;color:var(--gold);animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
 @keyframes pop{from{transform:scale(.4);opacity:0}}
 .map{height:200px;border-radius:var(--r);border:1px solid var(--line);background:#161617;position:relative;overflow:hidden}
+.gal{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -18px;padding:0 18px 6px;scrollbar-width:none}
+.gal figure{flex:0 0 72%;margin:0;aspect-ratio:4/5;border-radius:18px;overflow:hidden;position:relative;scroll-snap-align:start;background:var(--card);border:1px solid var(--line)}
+.gal img{position:absolute;inset:0}.gal figcaption{position:absolute;left:0;right:0;bottom:0;padding:28px 14px 12px;font-size:13px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75))}
+.cphoto{aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;position:relative;border:1px solid var(--line)}.cphoto img{position:absolute;inset:0}
+.tex .btn:not(.ghost),.tex .bar i{background:var(--tex) center/cover;color:#1b130b;text-shadow:0 1px 0 rgba(255,255,255,.25)}
+.tex .logo{border-width:2px}
+@media(min-width:700px){.gal figure{flex-basis:30%}}
+.toned .gal img,.toned .cphoto img,.bw .gal img,.bw .cphoto img{filter:grayscale(1) contrast(1.12) brightness(.8)}
 .note{margin:24px 0 0;font-size:12px;text-align:center;color:var(--mut)}
 @media(min-width:700px){.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr 1fr}.hero{min-height:460px;padding:56px}.hero h1{font-size:68px}.pole{right:70px;width:64px}.slots{grid-template-columns:repeat(6,1fr)}.brand{font-size:24px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -191,13 +199,14 @@ const views={
 home:()=>{const ph=C.hero.photo;return `<section class="view">
  <div class="hero ${ph?'photo':''}">${ph?`<div class="hero-bg" style="background-image:url('${esc(ph)}')"></div><div class="hero-shade"></div>`:'<div class="pole"></div>'}<h1>${esc(C.hero.title)}</h1><p>${esc(C.hero.text)}</p><div class="row">${Btn('Записаться','go:booking')}${Btn('Наши мастера','go:barbers','ghost')}</div></div>
  ${SecHead('Популярные услуги','Все услуги','services')}<div class="grid g3">${popular().map(ServiceCard).join('')}</div>
+ ${C.gallery&&C.gallery.length?SecHead(esc(C.galleryTitle||'Наши работы'))+`<div class="gal">${C.gallery.map(g=>`<figure>${img(g.photo,g.caption||'')}${g.caption?`<figcaption>${esc(g.caption)}</figcaption>`:''}</figure>`).join('')}</div>`:''}
  ${C.advantages&&C.advantages.length?SecHead('Почему '+esc(C.brand.shortName||C.brand.name))+`<div class="grid g2">${C.advantages.map(a=>`<div class="card adv">${icon('star',26)}<div><b>${esc(a[0])}</b><span style="color:var(--mut)">${esc(a[1])}</span></div></div>`).join('')}</div>`:''}
  ${SecHead('Как нас найти')}<div class="card">${Info('pin','Адрес',esc(C.contacts.address))}${Info('clock','Часы работы',hoursText())}</div></section>`},
 services:()=>`<section class="view">${SecHead('Услуги','Мастера','barbers')}${ServiceGrid(SERVICES)}</section>`,
 barbers:()=>`<section class="view">${SecHead('Наши мастера','Услуги','services')}<div class="grid g3">${BARBERS.map(BarberCard).join('')}</div></section>`,
 contacts:()=>`<section class="view">${SecHead('Контакты')}<div class="card">${Info('pin','Адрес',esc(C.contacts.address))}${Info('phone','Телефон',`<a href="${telHref}">${esc(C.contacts.phone)}</a>`)}${Info('clock','Часы работы',hoursText())}</div>
  ${Messengers()}
- <div class="map" role="img" aria-label="Схема проезда"><svg viewBox="0 0 400 200" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"><g stroke="#2b2b2e" stroke-width="10" fill="none"><path d="M-10 60L410 90M-10 150L410 120M90-10L130 210M260-10L230 210"/></g><g stroke="#232325" stroke-width="3" fill="none"><path d="M-10 105L410 105M180-10L190 210"/></g><g transform="translate(176 56) scale(1.8)" fill="var(--gold)" stroke="var(--bg)"><path d="M12 21s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5" fill="var(--bg)"/></g></svg></div>
+ ${C.contacts.photo?`<div class="cphoto">${img(C.contacts.photo,'Вход в '+C.brand.name)}</div>`:''}<div class="map" ${C.contacts.photo?'hidden':''} role="img" aria-label="Схема проезда"><svg viewBox="0 0 400 200" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"><g stroke="#2b2b2e" stroke-width="10" fill="none"><path d="M-10 60L410 90M-10 150L410 120M90-10L130 210M260-10L230 210"/></g><g stroke="#232325" stroke-width="3" fill="none"><path d="M-10 105L410 105M180-10L190 210"/></g><g transform="translate(176 56) scale(1.8)" fill="var(--gold)" stroke="var(--bg)"><path d="M12 21s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5" fill="var(--bg)"/></g></svg></div>
  ${C.contacts.mapUrl?`<a class="btn ghost full" style="margin-top:12px" href="${esc(C.contacts.mapUrl)}" target="_blank" rel="noopener">Открыть на карте</a>`:''}</section>`,
 booking:()=>EXTERNAL?External():S.done?Done():Booking()};
 
@@ -256,6 +265,13 @@ const R=document.documentElement.style,col=C.colors||{};
 if(col.background)R.setProperty('--bg',col.background);
 if(col.accent)R.setProperty('--gold',col.accent);
 if(col.accentLight)R.setProperty('--beige',col.accentLight);
+if(col.text)R.setProperty('--text',col.text);
+if(col.muted)R.setProperty('--mut',col.muted);
+if(col.card)R.setProperty('--card',col.card);
+if(col.line)R.setProperty('--line',col.line);
+if(col.texture){R.setProperty('--tex',`url('${col.texture}')`);document.body.classList.add('tex')}
+const F=C.fonts||{};
+if(F.display){const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(F.display)+':wght@400;500;600&display=swap';document.head.appendChild(l);R.setProperty('--display',`'${F.display}',${F.fallback||'system-ui,sans-serif'}`)}
 document.title=C.brand.name+' — запись онлайн';
 $('meta[name="theme-color"]').content=col.background||'#0e0e0f';
 $('#top').innerHTML=`<div class="logo">${esc(C.brand.monogram)}</div><div class="brand">${esc(C.brand.name)}<small>${esc(C.brand.tagline)}</small></div>`;

@@ -28,7 +28,7 @@ if len(ids) != len(set(ids)): errors.append('повторяются id услу�
 for s in C.get('services', []):
     for f in ['id', 'name', 'price', 'duration']:
         if s.get(f) in (None, ''): errors.append(f'у услуги {s.get("name")} не заполнено поле {f}')
-photos = [C['hero'].get('photo')] + [x.get('photo') for x in C['services'] + C['barbers']]
+photos = [C['hero'].get('photo'), C['contacts'].get('photo'), C['colors'].get('texture')] + [x.get('photo') for x in C['services'] + C['barbers'] + C.get('gallery', [])]
 for p in filter(None, photos):
     if not p.startswith('http') and not os.path.exists(p): errors.append(f'нет файла фото {p}')
 if C['booking'].get('mode') == 'external' and not C['booking'].get('externalUrl'):
