@@ -68,9 +68,17 @@ h3.cat{font-size:24px;margin:26px 0 12px;color:var(--beige)}h3.cat:first-of-type
 .info a{color:var(--text)}
 .sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .link{background:none;border:0;color:var(--gold);font:500 14px Manrope,sans-serif;cursor:pointer;padding:6px 0;white-space:nowrap}
-.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(540px,calc(100% - 24px));display:flex;z-index:20;background:rgba(26,26,28,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:26px;padding:6px}
-.nav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;border-radius:20px;color:var(--mut);text-decoration:none;font-size:11.5px;transition:.2s}
-.nav a.on{color:var(--gold);background:color-mix(in srgb,var(--gold) 13%,transparent)}.nav svg{width:22px;height:22px}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(540px,calc(100% - 24px));display:flex;z-index:20;padding:6px;border-radius:32px;touch-action:none;user-select:none;-webkit-user-select:none;
+ background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.03)),rgba(16,16,16,.42);backdrop-filter:blur(24px) saturate(190%) brightness(1.05);-webkit-backdrop-filter:blur(24px) saturate(190%) brightness(1.05);
+ border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 0 rgba(255,255,255,.06),inset 0 0 18px rgba(255,255,255,.05),0 12px 32px rgba(0,0,0,.5)}
+.nav::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(120% 90% at 20% -30%,rgba(255,255,255,.22),transparent 55%),radial-gradient(80% 70% at 100% 130%,rgba(255,255,255,.08),transparent 60%)}
+.nav a{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;border-radius:26px;color:rgba(255,255,255,.62);text-decoration:none;font-size:11.5px;transition:color .25s;-webkit-user-drag:none;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.nav a.on{color:var(--gold)}.nav svg{width:22px;height:22px}
+.pill{position:absolute;top:6px;bottom:6px;left:6px;width:calc((100% - 12px)/4);border-radius:26px;z-index:0;pointer-events:none;
+ transform:translateX(var(--x,0px)) scale(var(--s,1));transition:transform .45s cubic-bezier(.3,1.35,.45,1);
+ background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.22);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -2px 6px rgba(0,0,0,.15),0 4px 14px rgba(0,0,0,.25);backdrop-filter:blur(6px) saturate(160%);-webkit-backdrop-filter:blur(6px) saturate(160%)}
+.pill.drag{transition:transform .08s linear;--s:1.08}
 /* запись */
 .bk-h{display:flex;align-items:center;gap:10px;padding-top:6px}
 .icon-b{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer;display:grid;place-items:center;font-size:18px}
@@ -290,7 +298,27 @@ if(C.photoStyle!=='original')document.body.classList.add(C.photoStyle==='bw'?'bw
 const NAV=[['home','Главная','home'],['services','Услуги','list'],['booking','Запись','cal'],['contacts','Контакты','phone']];
 function render(){let r=location.hash.slice(1);if(!views[r])r='home';
  $('#app').innerHTML=views[r]();
- $('#nav').innerHTML=NAV.map(([id,t,i])=>`<a href="#${id}" class="${id===r||(r==='barbers'&&id==='services')?'on':''}">${icon(i,22)}${t}</a>`).join('');bindGal()}
+ setNav(r==='barbers'?'services':r);bindGal()}
+/* ===== НИЖНЕЕ МЕНЮ «ЖИДКОЕ СТЕКЛО» С ПЕРЕТАСКИВАЕМЫМ ПОЛЗУНКОМ ===== */
+let navIdx=0;
+function buildNav(){const nav=$('#nav');
+ nav.innerHTML='<span class="pill" id="pill"></span>'+NAV.map(([id,t,i])=>`<a href="#${id}" draggable="false">${icon(i,22)}${t}</a>`).join('');
+ const pill=$('#pill'),links=[...nav.querySelectorAll('a')];let drag=null;
+ const step=()=>links[0].offsetWidth, max=()=>(NAV.length-1)*step();
+ const idxAt=x=>{const r=nav.getBoundingClientRect();return Math.max(0,Math.min(NAV.length-1,Math.floor((x-r.left-6)/step())))};
+ nav.addEventListener('pointerdown',e=>{drag={x0:e.clientX,start:navIdx*step(),pos:navIdx*step(),moved:false,id:e.pointerId};pill.classList.add('drag')});
+ nav.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x0;
+  if(!drag.moved&&Math.abs(dx)>6){drag.moved=true;try{nav.setPointerCapture(drag.id)}catch(_){}}
+  if(!drag.moved)return;drag.pos=Math.max(0,Math.min(max(),drag.start+dx));pill.style.setProperty('--x',drag.pos+'px');
+  const near=Math.round(drag.pos/step());links.forEach((a,k)=>a.classList.toggle('on',k===near))});
+ const end=e=>{if(!drag)return;pill.classList.remove('drag');const d=drag;drag=null;
+  const i=d.moved?Math.round(d.pos/step()):idxAt(e.clientX);
+  if(d.moved||e.type==='pointerup'){navIdx=i;placePill();if(location.hash.slice(1)!==NAV[i][0])location.hash=NAV[i][0]}};
+ nav.addEventListener('pointerup',end);nav.addEventListener('pointercancel',e=>{if(drag){drag=null;pill.classList.remove('drag');placePill()}});
+ nav.addEventListener('click',e=>{if(e.detail!==0)e.preventDefault()}); // мышь и палец обрабатываем сами, клавиатура — как обычно
+ addEventListener('resize',placePill)}
+function placePill(){const nav=$('#nav'),links=[...nav.querySelectorAll('a')];$('#pill').style.setProperty('--x',navIdx*links[0].offsetWidth+'px');links.forEach((a,k)=>a.classList.toggle('on',k===navIdx))}
+function setNav(r){if(!$('#pill'))buildNav();const i=NAV.findIndex(n=>n[0]===r);navIdx=i<0?0:i;placePill()}
 function bindGal(){const g=$('#gal');if(!g)return;const bar=$('#gbar'),pv=$('.gnav.prev'),nx=$('.gnav.next');
  const upd=()=>{const max=g.scrollWidth-g.clientWidth,w=g.clientWidth/g.scrollWidth;bar.style.width=(w*100)+'%';bar.style.left=(max>0?g.scrollLeft/max*(1-w)*100:0)+'%';pv.disabled=g.scrollLeft<4;nx.disabled=g.scrollLeft>max-4};
  g.addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);upd()}
