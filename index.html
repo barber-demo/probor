@@ -25,6 +25,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif;font-w
 h2{font-size:28px;margin:34px 0 14px}h3{font-size:21px}
 p{color:var(--mut)}
 img{display:block;width:100%;height:100%;object-fit:cover}
+.art,.ph,.opt .ic{position:relative}.art img,.ph img,.opt .ic img{position:absolute;inset:0}
 .wrap{max-width:960px;margin:auto;padding:0 18px}
 .view{animation:in .3s ease}
 @keyframes in{from{opacity:0;transform:translateY(8px)}}
@@ -129,10 +130,10 @@ const IC={
  list:'<path d="M4 7h16M4 12h16M4 17h10"/>',star:'<path d="M12 3l2.7 5.5 6 .9-4.4 4.2 1 6L12 16.8 6.7 19.6l1-6L3.3 9.4l6-.9z"/>'};
 const BIG=['scissors','razor','comb'];
 const icon=(k,w=24)=>{k=IC[k]?k:'scissors';const big=BIG.includes(k);return `<svg viewBox="${big?'0 0 80 80':'0 0 24 24'}" width="${w}" height="${w}" fill="none" stroke="currentColor" stroke-width="${big?2.5:1.8}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k]}</svg>`};
-const img=(src,alt)=>`<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy">`;
+const img=(src,alt)=>`<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" onerror="this.remove()">`; // если фото не загрузилось — остаётся заглушка под ним
 const PAL=[['#2a2118','#d7b496'],['#171412','#c9a283'],['#5b4630','#e0c1a4'],['#3a2a1d','#cfa98a']];
 const portrait=(b,i)=>{const[hair,skin]=PAL[i%PAL.length];return `<svg viewBox="0 0 200 190" preserveAspectRatio="xMidYMax slice" role="img" aria-label="${esc(b.name)}"><path d="M20 190c0-42 36-60 80-60s80 18 80 60z" fill="#2b2b2e"/><path d="M82 190l18-34 18 34z" fill="var(--beige)" opacity=".9"/><rect x="88" y="104" width="24" height="30" rx="8" fill="${skin}"/><ellipse cx="100" cy="82" rx="30" ry="36" fill="${skin}"/>${i%3===1?`<path d="M70 86c0 34 14 48 30 48s30-14 30-48c-6 14-16 18-30 18s-24-4-30-18z" fill="${hair}"/>`:''}<path d="M68 78c-4-34 14-50 34-50s32 18 28 50c-4-14-12-24-30-24s-26 10-32 24z" fill="${hair}"/></svg>`};
-const barberPic=b=>b.photo?img(b.photo,b.name):portrait(b,BARBERS.indexOf(b));
+const barberPic=b=>portrait(b,BARBERS.indexOf(b))+(b.photo?img(b.photo,b.name):'');
 
 /* ===== ГРАФИК РАБОТЫ ===== */
 const WD=['sun','mon','tue','wed','thu','fri','sat'], WD_RU={mon:'Пн',tue:'Вт',wed:'Ср',thu:'Чт',fri:'Пт',sat:'Сб',sun:'Вс'};
@@ -162,7 +163,7 @@ const STEPS=['Услуга','Мастер','Дата и время','Конта�
 
 /* ===== КОМПОНЕНТЫ ===== */
 const Btn=(t,a,c='')=>`<button class="btn ${c}" data-a="${a}">${t}</button>`;
-const ServiceCard=s=>`<article class="card svc"><div class="art">${s.photo?img(s.photo,s.name):icon(s.icon,54)}</div><h3>${esc(s.name)}</h3><p>${esc(s.description)}</p><div class="meta"><b>${rub(s.price)}</b><span>${s.duration} мин</span></div>${Btn('Записаться','pick:'+s.id,'full')}</article>`;
+const ServiceCard=s=>`<article class="card svc"><div class="art">${icon(s.icon,54)}${s.photo?img(s.photo,s.name):''}</div><h3>${esc(s.name)}</h3><p>${esc(s.description)}</p><div class="meta"><b>${rub(s.price)}</b><span>${s.duration} мин</span></div>${Btn('Записаться','pick:'+s.id,'full')}</article>`;
 const BarberCard=b=>`<article class="card"><div class="ph">${barberPic(b)}</div><h3>${esc(b.name)}</h3><p style="margin:2px 0 10px;color:var(--gold)">${esc(b.role)}</p><p style="margin-bottom:12px">${esc(b.description)}</p>${(b.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}<div style="margin-top:10px">${Btn('Записаться к мастеру','pickb:'+b.id,'ghost full sm')}</div></article>`;
 const Info=(i,t,v)=>`<div class="info">${icon(i,22)}<div><b>${t}</b><span style="color:var(--mut)">${v}</span></div></div>`;
 const SecHead=(t,l,to)=>`<div class="sec-h"><h2>${t}</h2>${l?`<button class="link" data-a="go:${to}">${l}</button>`:''}</div>`;
@@ -198,7 +199,7 @@ function External(){const s=S.service&&svc(S.service),b=S.barber!=='any'&&brb(S.
 
 function Booking(){
  const st=S.step,s=S.service&&svc(S.service);let body='';
- if(st===0)body=SERVICES.map(x=>`<button class="card opt ${S.service===x.id?'sel':''}" data-a="svc:${x.id}"><span class="ic">${x.photo?img(x.photo,x.name):icon(x.icon,28)}</span><span class="t"><b>${esc(x.name)}</b><span>${x.duration} мин</span></span><span class="p">${rub(x.price)}</span></button>`).join('<div style="height:10px"></div>');
+ if(st===0)body=SERVICES.map(x=>`<button class="card opt ${S.service===x.id?'sel':''}" data-a="svc:${x.id}"><span class="ic">${icon(x.icon,28)}${x.photo?img(x.photo,x.name):''}</span><span class="t"><b>${esc(x.name)}</b><span>${x.duration} мин</span></span><span class="p">${rub(x.price)}</span></button>`).join('<div style="height:10px"></div>');
  if(st===1)body=[['any','Любой свободный мастер','Подберём ближайшее время'],...BARBERS.map(b=>[b.id,b.name,b.role])].map(([id,n,r])=>`<button class="card opt ${S.barber===id?'sel':''}" data-a="brb:${id}"><span class="ic">${id==='any'?icon('star',24):`<span class="ph">${barberPic(brb(id))}</span>`}</span><span class="t"><b>${esc(n)}</b><span>${esc(r)}</span></span></button>`).join('<div style="height:10px"></div>');
  if(st===2){const n=nSlots(),sl=slotsFor(S.date);
   body=`<span class="lab">Дата</span><div class="dates">${days.map(d=>{const k=dkey(d);return `<button class="date ${S.date===k?'sel':''}" ${hoursOf(d)?'':'disabled'} data-a="date:${k}"><small>${d.toLocaleDateString('ru-RU',{weekday:'short'})}</small><b>${d.getDate()}</b><small>${d.toLocaleDateString('ru-RU',{month:'short'})}</small></button>`}).join('')}</div>
