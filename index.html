@@ -110,6 +110,16 @@ h3.cat{font-size:24px;margin:26px 0 12px;color:var(--beige)}h3.cat:first-of-type
 .cphoto{aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;position:relative;border:1px solid var(--line)}.cphoto img{position:absolute;inset:0}
 .tex .btn:not(.ghost),.tex .bar i{background:var(--tex) center/cover;color:#1b130b;text-shadow:0 1px 0 rgba(255,255,255,.25)}
 .tex .logo{border-width:2px}
+/* кнопки «жидкое стекло» (buttons: "glass" в config.js) */
+.glass .btn{position:relative;overflow:hidden;color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.35);
+ background:linear-gradient(180deg,rgba(255,255,255,.36),rgba(255,255,255,.14)),color-mix(in srgb,var(--gold) 16%,transparent);
+ border:1px solid rgba(255,255,255,.26);backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 3px rgba(0,0,0,.3),0 8px 22px rgba(0,0,0,.35);transition:transform .15s,box-shadow .2s,background .2s}
+.glass .btn::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(90% 120% at 15% -40%,rgba(255,255,255,.35),transparent 55%)}
+.glass .btn:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -1px 3px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.45)}
+.glass .btn.ghost{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));border-color:rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 6px 16px rgba(0,0,0,.25)}
+.glass .btn:disabled{opacity:.35}
+.glass .bar i,.glass .gbar i{background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.45));box-shadow:0 0 8px rgba(255,255,255,.25)}
 .galw{position:relative}
 .gnav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(10,10,10,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:26px;line-height:1;cursor:pointer;z-index:2;display:grid;place-items:center;transition:opacity .2s}
 .gnav.prev{left:8px}.gnav.next{right:8px}.gnav:disabled{opacity:0;pointer-events:none}
@@ -285,6 +295,7 @@ if(col.text)R.setProperty('--text',col.text);
 if(col.muted)R.setProperty('--mut',col.muted);
 if(col.card)R.setProperty('--card',col.card);
 if(col.line)R.setProperty('--line',col.line);
+if(C.buttons==='glass')document.body.classList.add('glass');
 if(col.texture){R.setProperty('--tex',`url('${col.texture}')`);document.body.classList.add('tex')}
 const F=C.fonts||{};
 if(F.display){const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(F.display)+':wght@400;500;600&display=swap';document.head.appendChild(l);R.setProperty('--display',`'${F.display}',${F.fallback||'system-ui,sans-serif'}`)}
