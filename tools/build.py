@@ -30,7 +30,7 @@ for s in C.get('services', []):
         if s.get(f) in (None, ''): errors.append(f'у услуги {s.get("name")} не заполнено поле {f}')
 photos = [C['hero'].get('photo')] + [x.get('photo') for x in C['services'] + C['barbers']]
 for p in filter(None, photos):
-    if not os.path.exists(p): errors.append(f'нет файла фото {p}')
+    if not p.startswith('http') and not os.path.exists(p): errors.append(f'нет файла фото {p}')
 if C['booking'].get('mode') == 'external' and not C['booking'].get('externalUrl'):
     errors.append('booking.mode = "external", но не указан externalUrl')
 if errors:
@@ -73,7 +73,7 @@ icon(192, 'icons/icon-192.png'); icon(512, 'icons/icon-512.png'); icon(180, 'ico
 
 # --- service worker ---
 files = ['index.html', 'config.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'] \
-        + sorted(set(filter(None, photos)))
+        + sorted({p for p in photos if p and not p.startswith('http')})
 h = hashlib.sha1()
 for f in files: h.update(open(f, 'rb').read())
 ver = 'v-' + h.hexdigest()[:10]
